@@ -1,0 +1,17 @@
+{
+  "name": "points-on-map",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ol": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3",
+    "vite": "^5.2.7"
+  }
+}
