@@ -11,16 +11,17 @@ import data from './data.json';
 import { TrackerData } from './types';
 import { LineString } from 'ol/geom';
 
+
 const zoom = 10;
 const center = fromLonLat([24.7536, 59.4370]);
 
 const { location: routes } = (data as TrackerData);
 
-const icon = new Icon({
+const icon = {
     src: 'poi.svg',
     anchor: [0.5, 0.5],
     scale: 1
-});
+}
 
 const routeStyle = new Style({
     stroke: new Stroke({
@@ -37,7 +38,7 @@ const vehiclesLayer = new VectorLayer({
             geometry: new Point(fromLonLat([parseFloat(points[0].lng), parseFloat(points[0].lat)]))
         }))
     }),
-    style: new Style({ image: icon })
+    style: new Style({ image: new Icon(icon) })
 });
 
 const routesLayer = new VectorLayer({
@@ -46,7 +47,19 @@ const routesLayer = new VectorLayer({
             geometry: new LineString(points.map(({ lng, lat }) => fromLonLat([parseFloat(lng), parseFloat(lat)])))
         }))
     }),
-    style: routeStyle
+    style: routeStyle,
+    visible: false // Hidden just for testing
+});
+
+const historicalLayer = new VectorLayer({
+    source: new VectorSource({
+        features: Object.values(routes).reduce<Feature[]>((acc, points) => {
+            return acc.concat(points.map(({ lng, lat }) => new Feature({
+                geometry: new Point(fromLonLat([parseFloat(lng), parseFloat(lat)]))
+            })))
+        }, [])
+    }),
+    style: new Style({ image: new Icon({ ...icon, opacity: 0.5 }) })
 });
 
 new Map({
@@ -54,7 +67,8 @@ new Map({
     layers: [
         baseLayer,
         vehiclesLayer,
-        routesLayer
+        routesLayer,
+        historicalLayer
     ],
     view: new View({
         center,
