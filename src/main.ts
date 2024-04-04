@@ -29,7 +29,7 @@ const poiLayer = new VectorLayer({
 
 const baseLayer = new TileLayer({ source: new OSM() });
 
-const map = new Map({
+new Map({
   target: 'map',
   layers: [
     baseLayer,
